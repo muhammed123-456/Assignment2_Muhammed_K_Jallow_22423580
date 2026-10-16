@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Global Echo | Online Magazine & News</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Inter & Playfair Display -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;0,900;1,400&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    },
+                    colors: {
+                        journal: {
+                            50: '#f8f9fa',
+                            100: '#e9ecef',
+                            800: '#212529',
+                            900: '#111315',
+                            accent: '#c92a2a', // Editorial Red
+                            gold: '#d97706'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-journal-50 text-journal-800 font-sans antialiased selection:bg-journal-accent selection:text-white">
+
+    <!-- Top Utility Bar (Flexbox) -->
+    <div class="bg-journal-900 text-gray-300 text-xs py-2 px-4 border-b border-gray-800">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-2">
+            <div class="flex items-center gap-4">
+                <span class="flex items-center gap-1.5"><i class="fa-solid fa-calendar-days text-journal-accent"></i> <span id="current-date">Thursday, October 15, 2026</span></span>
+                <span class="hidden md:inline-block text-gray-500">|</span>
+                <span class="hidden md:flex items-center gap-1"><i class="fa-solid fa-location-dot text-journal-accent"></i> Global Edition</span>
+            </div>
+            <div class="flex items-center gap-4">
+                <button onclick="openProjectNote()" class="text-journal-gold hover:underline flex items-center gap-1 font-medium bg-gray-800 px-2.5 py-1 rounded transition">
+                    <i class="fa-solid fa-graduation-cap"></i> View Assignment Note & Deliverables
+                </button>
+                <div class="flex items-center gap-3">
+                    <a href="#newsletter" class="hover:text-white transition"><i class="fa-solid fa-envelope"></i> Newsletter</a>
+                    <a href="#about" class="hover:text-white transition"><i class="fa-solid fa-circle-info"></i> About</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Header & Branding -->
+    <header class="bg-white border-b border-gray-200 sticky top-0 z-40 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 py-5 flex flex-col md:flex-row justify-between items-center gap-4">
+            <!-- Mobile Menu Toggle Button (Flexbox) -->
+            <div class="w-full md:w-auto flex justify-between items-center">
+                <a href="#" class="group">
+                    <h1 class="font-serif text-3xl md:text-4xl font-black tracking-tight text-journal-900 group-hover:text-journal-accent transition">
+                        THE GLOBAL ECHO
+                    </h1>
+                    <p class="text-xs uppercase tracking-widest text-gray-500 font-semibold mt-0.5">Independent Journal of Culture, Tech & Society</p>
+                </a>
+                <button id="mobile-menu-btn" class="md:hidden text-2xl text-journal-900 p-2 focus:outline-none" aria-label="Toggle Navigation">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+            </div>
+
+            <!-- Search and Weather Widget (Flexbox) -->
+            <div class="hidden md:flex items-center gap-4">
+                <div class="relative">
+                    <input type="text" placeholder="Search articles..." class="bg-gray-100 text-sm rounded-full py-2 pl-4 pr-10 focus:outline-none focus:ring-2 focus:ring-journal-accent/50 w-60 transition">
+                    <button class="absolute right-3 top-2.5 text-gray-500 hover:text-journal-accent"><i class="fa-solid fa-magnifying-glass"></i></button>
+                </div>
+                <div class="bg-gray-100 px-3 py-1.5 rounded-lg text-xs flex items-center gap-2 border border-gray-200">
+                    <i class="fa-solid fa-cloud-sun text-amber-500 text-base"></i>
+                    <div>
+                        <p class="font-semibold text-journal-900">28°C, Banjul</p>
+                        <p class="text-gray-500 text-[10px]">Sunny & Clear</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation Menu Bar (Flexbox) -->
+        <nav id="nav-menu" class="hidden md:block bg-journal-900 text-white border-t border-gray-800">
+            <div class="max-w-7xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center">
+                <ul class="flex flex-col md:flex-row w-full md:w-auto space-y-1 md:space-y-0 md:space-x-1 py-2 md:py-0 text-sm font-medium">
+                    <li><a href="#" onclick="filterCategory('all')" class="nav-link block px-4 py-2.5 rounded hover:bg-journal-accent transition active-category" data-cat="all">Home</a></li>
+                    <li><a href="#articles" onclick="filterCategory('Technology')" class="nav-link block px-4 py-2.5 rounded hover:bg-journal-accent transition" data-cat="Technology">Technology</a></li>
+                    <li><a href="#articles" onclick="filterCategory('Culture')" class="nav-link block px-4 py-2.5 rounded hover:bg-journal-accent transition" data-cat="Culture">Culture</a></li>
+                    <li><a href="#articles" onclick="filterCategory('Business')" class="nav-link block px-4 py-2.5 rounded hover:bg-journal-accent transition" data-cat="Business">Business</a></li>
+                    <li><a href="#articles" onclick="filterCategory('Environment')" class="nav-link block px-4 py-2.5 rounded hover:bg-journal-accent transition" data-cat="Environment">Environment</a></li>
+                    <li><a href="#articles" onclick="filterCategory('Opinion')" class="nav-link block px-4 py-2.5 rounded hover:bg-journal-accent transition" data-cat="Opinion">Opinion</a></li>
+                </ul>
+                <div class="hidden lg:flex items-center gap-3 py-2 text-xs text-gray-400 pr-2">
+                    <span><strong class="text-white">Trending:</strong> AI in Education</span>
+                    <span class="w-1.5 h-1.5 rounded-full bg-journal-accent"></span>
+                    <span>Renewable Grids</span>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content Wrapper -->
+    <main class="max-w-7xl mx-auto px-4 py-8 space-y-12">
+
+        <!-- Hero Breaking Story Section (CSS Grid Layout) -->
+        <section class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch">
+            <!-- Main Featured Story (Takes 2 cols on large screen) -->
+            <div class="lg:col-span-2 bg-white rounded-xl shadow-md overflow-hidden border border-gray-200 flex flex-col justify-between group">
+                <div class="relative overflow-hidden aspect-video">
+                    <img src="https://placehold.co/1200x675/111315/ffffff?text=The+Future+of+Digital+Infrastructure" alt="Featured Story" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" onerror="this.src='https://placehold.co/800x450/222/fff?text=News+Image'">
+                    <span class="absolute top-4 left-4 bg-journal-accent text-white text-xs font-bold uppercase tracking-wider px-3 py-1 rounded shadow">Breaking News</span>
+                </div>
+                <div class="p-6 md:p-8 flex flex-col justify-between flex-grow">
+                    <div>
+                        <div class="flex items-center gap-3 text-xs text-gray-500 mb-3 font-medium">
+                            <span class="text-journal-accent font-semibold uppercase">Technology</span>
+                            <span>•</span>
+                            <span><i class="fa-regular fa-clock"></i> 4 min read</span>
+                            <span>•</span>
+                            <span>October 15, 2026</span>
+                        </div>
+                        <h2 class="font-serif text-2xl md:text-3xl font-bold text-journal-900 group-hover:text-journal-accent transition mb-3">
+                            Revolutionizing Sub-Saharan Digital Infrastructure: How 5G and Solar Micro-Grids Are Connecting Rural Communities
+                        </h2>
+                        <p class="text-gray-600 text-sm md:text-base leading-relaxed mb-6">
+                            A new wave of decentralized tech initiatives is transforming remote areas into thriving digital hubs. Engineers and local leaders share insights on sustainable power and high-speed connectivity.
+                        </p>
+                    </div>
+                    <!-- Author & Footer Meta (Flexbox) -->
+                    <div class="flex items-center justify-between pt-4 border-t border-gray-100 mt-auto">
+                        <div class="flex items-center gap-3">
+                            <img src="https://placehold.co/100x100/c92a2a/ffffff?text=FA" alt="Author" class="w-10 h-10 rounded-full object-cover border">
+                            <div>
+                                <h4 class="text-sm font-bold text-journal-900">Fatoumatta Ann</h4>
+                                <p class="text-xs text-gray-500">Senior Technology Editor</p>
+                            </div>
+                        </div>
+                        <button onclick="openArticleModal('Revolutionizing Sub-Saharan Digital Infrastructure', 'Fatoumatta Ann', 'October 15, 2026', 'Technology', 'A new wave of decentralized tech initiatives is transforming remote areas into thriving digital hubs. Engineers and local leaders share insights on sustainable power and high-speed connectivity... [Full article text simulation exploring innovations in solar micro-grids, community-owned fiber networks, and mobile payment ecosystems that empower local entrepreneurs.]')" class="bg-journal-900 hover:bg-journal-accent text-white text-xs font-semibold px-4 py-2 rounded-lg transition shadow-sm">
+                            Read Article <i class="fa-solid fa-arrow-right ml-1"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Secondary Top Stories Sidebar Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-6">
+                <!-- Sub-story 1 -->
+                <div class="bg-white rounded-xl shadow-sm hover:shadow-md transition p-5 border border-gray-200 flex flex-col justify-between group">
+                    <div>
+                        <div class="flex items-center justify-between text-xs text-gray-500 mb-2">
+                            <span class="text-amber-600 font-bold uppercase">Culture & Arts</span>
+                            <span>2 hours ago</span>
+                        </div>
+                        <h3 class="font-serif font-bold text-lg text-journal-900 group-hover:text-journal-accent transition mb-2">
+                            Preserving Heritage: Modern Architects Embrace Traditional West African Earth Building
+                        </h3>
+                        <p class="text-xs text-gray-600 line-clamp-2">
+                            Merging ancient masonry techniques with modern climate engineering to build sustainable, cool community spaces.
+                        </p>
+                    </div>
+                    <div class="flex items-center justify-between mt-4 pt-3 border-t border-gray-100 text-xs">
+                        <span class="text-gray-500 font-medium">By Lamin Jatta</span>
+                        <button onclick="openArticleModal('Preserving Heritage: Modern Architects Embrace Traditional West African Earth Building', 'Lamin Jatta', '2 hours ago', 'Culture & Arts', 'Merging ancient masonry techniques with modern climate engineering to build sustainable, cool community spaces. Architects are rediscovering laterite bricks and passive cooling...')" class="text-journal-accent font-semibold hover:underline">Read Story &rarr;</button>
+                    </div>
+                </div>
+
+                <!-- Sub-story 2 -->
+                <div class="bg-white rounded-xl shadow-sm hover:shadow-md transition p-5 border border-gray-200 flex flex-col justify-between group">
+                    <div>
+                        <div class="flex items-center justify-between text-xs text-gray-500 mb-2">
+                            <span class="text-emerald-600 font-bold uppercase">Business</span>
+                            <span>5 hours ago</span>
+                        </div>
+                        <h3 class="font-serif font-bold text-lg text-journal-900 group-hover:text-journal-accent transition mb-2">
+                            AgriTech Startups See Record Venture Funding in Q3 2026
+                        </h3>
+                        <p class="text-xs text-gray-600 line-clamp-2">
+                            Smart irrigation systems and drone crop monitoring are attracting international investors eager to back sustainable agriculture.
+                        </p>
+                    </div>
+                    <div class="flex items-center justify-between mt-4 pt-3 border-t border-gray-100 text-xs">
+                        <span class="text-gray-500 font-medium">By Sarah Jenkins</span>
+                        <button onclick="openArticleModal('AgriTech Startups See Record Venture Funding in Q3 2026', 'Sarah Jenkins', '5 hours ago', 'Business', 'Smart irrigation systems and drone crop monitoring are attracting international investors eager to back sustainable agriculture across emerging markets...')" class="text-journal-accent font-semibold hover:underline">Read Story &rarr;</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Main Articles Section with Sidebar (CSS Grid Layout) -->
+        <section id="articles" class="grid grid-cols-1 lg:grid-cols-4 gap-8 items-start">
+            
+            <!-- Article Feed Grid (3 Columns on Large Screen) -->
+            <div class="lg:col-span-3 space-y-6">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-gray-200 pb-4 gap-4">
+                    <div>
+                        <h2 class="font-serif text-2xl font-bold text-journal-900" id="section-heading">Latest Publications</h2>
+                        <p class="text-xs text-gray-500">Explore in-depth reporting, expert opinions, and cultural features.</p>
+                    </div>
+                    <div class="flex items-center gap-2 text-xs">
+                        <span class="font-medium text-gray-600">Sort by:</span>
+                        <select class="bg-white border border-gray-300 rounded px-2 py-1 focus:outline-none focus:ring-1 focus:ring-journal-accent">
+                            <option>Newest First</option>
+                            <option>Most Popular</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Articles Grid (CSS Grid Container) -->
+                <div id="articles-grid" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    
+                    <!-- Article Card 1 -->
+                    <article class="article-card bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden flex flex-col justify-between group" data-category="Technology">
+                        <div>
+                            <div class="relative overflow-hidden h-48">
+                                <img src="https://placehold.co/600x400/212529/ffffff?text=AI+Coding+Assistants" alt="Article Thumbnail" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
+                                <span class="absolute top-3 left-3 bg-journal-900 text-white text-[10px] font-bold uppercase px-2.5 py-1 rounded">Technology</span>
+                            </div>
+                            <div class="p-5">
+                                <div class="text-xs text-gray-500 mb-2 flex items-center gap-2">
+                                    <span><i class="fa-regular fa-calendar"></i> Oct 14, 2026</span>
+                                    <span>•</span>
+                                    <span>3 min read</span>
+                                </div>
+                                <h3 class="font-serif font-bold text-lg text-journal-900 group-hover:text-journal-accent transition mb-2">
+                                    The Ethical Implications of Autonomous AI Tutors in Higher Education
+                                </h3>
+                                <p class="text-xs text-gray-600 line-clamp-3">
+                                    As universities adopt personalized artificial intelligence mentors, educators debate the balance between personalized pacing and loss of human mentorship.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="p-5 pt-0 flex items-center justify-between text-xs border-t border-gray-100 mt-4 pt-3">
+                            <span class="text-gray-500 font-medium">By Dr. Ousman Touray</span>
+                            <button onclick="openArticleModal('The Ethical Implications of Autonomous AI Tutors in Higher Education', 'Dr. Ousman Touray', 'Oct 14, 2026', 'Technology', 'As universities adopt personalized artificial intelligence mentors, educators debate the balance between personalized pacing and loss of human mentorship. Comprehensive study reveals mixed student sentiment...')" class="text-journal-accent font-semibold hover:underline">Read Article</button>
+                        </div>
+                    </article>
+
+                    <!-- Article Card 2 -->
+                    <article class="article-card bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden flex flex-col justify-between group" data-category="Culture">
+                        <div>
+                            <div class="relative overflow-hidden h-48">
+                                <img src="https://placehold.co/600x400/c92a2a/ffffff?text=Music+Renaissance" alt="Article Thumbnail" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
+                                <span class="absolute top-3 left-3 bg-journal-accent text-white text-[10px] font-bold uppercase px-2.5 py-1 rounded">Culture</span>
+                            </div>
+                            <div class="p-5">
+                                <div class="text-xs text-gray-500 mb-2 flex items-center gap-2">
+                                    <span><i class="fa-regular fa-calendar"></i> Oct 13, 2026</span>
+                                    <span>•</span>
+                                    <span>5 min read</span>
+                                </div>
+                                <h3 class="font-serif font-bold text-lg text-journal-900 group-hover:text-journal-accent transition mb-2">
+                                    Afro-Fusion Renaissance: How Independent Artists Are Taking Global Stages
+                                </h3>
+                                <p class="text-xs text-gray-600 line-clamp-3">
+                                    Independent producers in Dakar, Lagos, and Accra are leveraging direct-to-fan streaming platforms to bypass traditional record label gatekeepers.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="p-5 pt-0 flex items-center justify-between text-xs border-t border-gray-100 mt-4 pt-3">
+                            <span class="text-gray-500 font-medium">By Mariam Sowe</span>
+                            <button onclick="openArticleModal('Afro-Fusion Renaissance: How Independent Artists Are Taking Global Stages', 'Mariam Sowe', 'Oct 13, 2026', 'Culture', 'Independent producers in Dakar, Lagos, and Accra are leveraging direct-to-fan streaming platforms to bypass traditional record label gatekeepers, creating a golden era of musical innovation.')" class="text-journal-accent font-semibold hover:underline">Read Article</button>
+                        </div>
+                    </article>
+
+                    <!-- Article Card 3 -->
+                    <article class="article-card bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden flex flex-col justify-between group" data-category="Environment">
+                        <div>
+                            <div class="relative overflow-hidden h-48">
+                                <img src="https://placehold.co/600x400/0d9488/ffffff?text=Mangrove+Restoration" alt="Article Thumbnail" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
+                                <span class="absolute top-3 left-3 bg-teal-700 text-white text-[10px] font-bold uppercase px-2.5 py-1 rounded">Environment</span>
+                            </div>
+                            <div class="p-5">
+                                <div class="text-xs text-gray-500 mb-2 flex items-center gap-2">
+                                    <span><i class="fa-regular fa-calendar"></i> Oct 12, 2026</span>
+                                    <span>•</span>
+                                    <span>4 min read</span>
+                                </div>
+                                <h3 class="font-serif font-bold text-lg text-journal-900 group-hover:text-journal-accent transition mb-2">
+                                    Coastal Guardians: Community-Led Mangrove Restoration Protects Shorelines
+                                </h3>
+                                <p class="text-xs text-gray-600 line-clamp-3">
+                                    Local women’s cooperatives lead massive reforestation projects along the estuary, boosting fish populations and shielding villages from erosion.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="p-5 pt-0 flex items-center justify-between text-xs border-t border-gray-100 mt-4 pt-3">
+                            <span class="text-gray-500 font-medium">By Ebrima Ceesay</span>
+                            <button onclick="openArticleModal('Coastal Guardians: Community-Led Mangrove Restoration Protects Shorelines', 'Ebrima Ceesay', 'Oct 12, 2026', 'Environment', 'Local womens cooperatives lead massive reforestation projects along the estuary, boosting fish populations and shielding villages from storm surges and erosion.')" class="text-journal-accent font-semibold hover:underline">Read Article</button>
+                        </div>
+                    </article>
+
+                    <!-- Article Card 4 -->
+                    <article class="article-card bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden flex flex-col justify-between group" data-category="Business">
+                        <div>
+                            <div class="relative overflow-hidden h-48">
+                                <img src="https://placehold.co/600x400/d97706/ffffff?text=Fintech+Inclusion" alt="Article Thumbnail" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
+                                <span class="absolute top-3 left-3 bg-amber-600 text-white text-[10px] font-bold uppercase px-2.5 py-1 rounded">Business</span>
+                            </div>
+                            <div class="p-5">
+                                <div class="text-xs text-gray-500 mb-2 flex items-center gap-2">
+                                    <span><i class="fa-regular fa-calendar"></i> Oct 11, 2026</span>
+                                    <span>•</span>
+                                    <span>3 min read</span>
+                                </div>
+                                <h3 class="font-serif font-bold text-lg text-journal-900 group-hover:text-journal-accent transition mb-2">
+                                    Cross-Border Mobile Payments: Simplifying Regional Trade for SMEs
+                                </h3>
+                                <p class="text-xs text-gray-600 line-clamp-3">
+                                    New interoperable payment gateways cut currency exchange friction for small-scale merchants trading across West African borders.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="p-5 pt-0 flex items-center justify-between text-xs border-t border-gray-100 mt-4 pt-3">
+                            <span class="text-gray-500 font-medium">By Binta Njie</span>
+                            <button onclick="openArticleModal('Cross-Border Mobile Payments: Simplifying Regional Trade for SMEs', 'Binta Njie', 'Oct 11, 2026', 'Business', 'New interoperable payment gateways cut currency exchange friction for small-scale merchants trading across borders, boosting regional commerce significantly.')" class="text-journal-accent font-semibold hover:underline">Read Article</button>
+                        </div>
+                    </article>
+
+                    <!-- Article Card 5 -->
+                    <article class="article-card bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden flex flex-col justify-between group" data-category="Opinion">
+                        <div>
+                            <div class="relative overflow-hidden h-48">
+                                <img src="https://placehold.co/600x400/4f46e5/ffffff?text=Digital+Public+Square" alt="Article Thumbnail" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
+                                <span class="absolute top-3 left-3 bg-indigo-600 text-white text-[10px] font-bold uppercase px-2.5 py-1 rounded">Opinion</span>
+                            </div>
+                            <div class="p-5">
+                                <div class="text-xs text-gray-500 mb-2 flex items-center gap-2">
+                                    <span><i class="fa-regular fa-calendar"></i> Oct 10, 2026</span>
+                                    <span>•</span>
+                                    <span>6 min read</span>
+                                </div>
+                                <h3 class="font-serif font-bold text-lg text-journal-900 group-hover:text-journal-accent transition mb-2">
+                                    Reclaiming the Digital Public Square from Algorithmic Polarization
+                                </h3>
+                                <p class="text-xs text-gray-600 line-clamp-3">
+                                    An essay on why decentralized open protocols and community moderation are essential for healthy democratic discourse online.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="p-5 pt-0 flex items-center justify-between text-xs border-t border-gray-100 mt-4 pt-3">
+                            <span class="text-gray-500 font-medium">By Prof. Kebba Cham</span>
+                            <button onclick="openArticleModal('Reclaiming the Digital Public Square from Algorithmic Polarization', 'Prof. Kebba Cham', 'Oct 10, 2026', 'Opinion', 'An essay on why decentralized open protocols and community moderation are essential for healthy democratic discourse online in an era of sensationalist algorithms.')" class="text-journal-accent font-semibold hover:underline">Read Article</button>
+                        </div>
+                    </article>
+
+                    <!-- Article Card 6 -->
+                    <article class="article-card bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden flex flex-col justify-between group" data-category="Culture">
+                        <div>
+                            <div class="relative overflow-hidden h-48">
+                                <img src="https://placehold.co/600x400/374151/ffffff?text=Culinary+Traditions" alt="Article Thumbnail" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
+                                <span class="absolute top-3 left-3 bg-journal-accent text-white text-[10px] font-bold uppercase px-2.5 py-1 rounded">Culture</span>
+                            </div>
+                            <div class="p-5">
+                                <div class="text-xs text-gray-500 mb-2 flex items-center gap-2">
+                                    <span><i class="fa-regular fa-calendar"></i> Oct 9, 2026</span>
+                                    <span>•</span>
+                                    <span>4 min read</span>
+                                </div>
+                                <h3 class="font-serif font-bold text-lg text-journal-900 group-hover:text-journal-accent transition mb-2">
+                                    The Global Culinary Journey of West African Rice and Spice Traditions
+                                </h3>
+                                <p class="text-xs text-gray-600 line-clamp-3">
+                                    Tracing the profound historical influence of West African culinary heritage on global cuisine and contemporary fine dining.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="p-5 pt-0 flex items-center justify-between text-xs border-t border-gray-100 mt-4 pt-3">
+                            <span class="text-gray-500 font-medium">Chef Isatou Ceesay</span>
+                            <button onclick="openArticleModal('The Global Culinary Journey of West African Rice and Spice Traditions', 'Chef Isatou Ceesay', 'Oct 9, 2026', 'Culture', 'Tracing the profound historical influence of West African culinary heritage on global cuisine, focusing on flavor profiles, grains, and spice blends.')" class="text-journal-accent font-semibold hover:underline">Read Article</button>
+                        </div>
+                    </article>
+
+                </div>
+
+                <!-- Pagination (Flexbox) -->
+                <div class="flex justify-center items-center gap-2 pt-6">
+                    <button class="px-4 py-2 border border-gray-300 rounded-lg text-xs font-semibold bg-white text-gray-500 hover:bg-gray-50 disabled" disabled>Previous</button>
+                    <button class="px-4 py-2 bg-journal-900 text-white rounded-lg text-xs font-semibold shadow-sm">1</button>
+                    <button class="px-4 py-2 border border-gray-300 rounded-lg text-xs font-semibold bg-white hover:bg-gray-100 transition">2</button>
+                    <button class="px-4 py-2 border border-gray-300 rounded-lg text-xs font-semibold bg-white hover:bg-gray-100 transition">3</button>
+                    <button class="px-4 py-2 border border-gray-300 rounded-lg text-xs font-semibold bg-white hover:bg-gray-100 transition">Next</button>
+                </div>
+            </div>
+
+            <!-- Sidebar (Trending News & Categories Widget) -->
+            <aside class="space-y-6">
+                <!-- Trending Widget -->
+                <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-200">
+                    <h3 class="font-serif font-bold text-lg text-journal-900 pb-3 border-b border-gray-100 mb-4 flex items-center gap-2">
+                        <i class="fa-solid fa-fire text-journal-accent"></i> Trending Stories
+                    </h3>
+                    <div class="space-y-4">
+                        <div class="flex items-start gap-3 group cursor-pointer" onclick="openArticleModal('Space Science: African Satellite Constellation', 'Dr. Alieu Bah', '1 day ago', 'Technology', 'African space agencies coordinate to launch multi-spectral Earth observation satellites for climate monitoring and agricultural forecasting.')">
+                            <span class="font-serif text-2xl font-bold text-gray-300 group-hover:text-journal-accent transition">01</span>
+                            <div>
+                                <h4 class="text-sm font-bold text-journal-900 group-hover:text-journal-accent transition">African Satellite Constellation Boosts Climate Resilience</h4>
+                                <span class="text-[11px] text-gray-500">12.4k Reads • Technology</span>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-3 group cursor-pointer" onclick="openArticleModal('Renewable Energy Milestone', 'Aminata Sarr', '2 days ago', 'Environment', 'Grid modernization project reaches 80% renewable energy capacity milestone ahead of schedule, reducing carbon output.')">
+                            <span class="font-serif text-2xl font-bold text-gray-300 group-hover:text-journal-accent transition">02</span>
+                            <div>
+                                <h4 class="text-sm font-bold text-journal-900 group-hover:text-journal-accent transition">National Grid Reaches 80% Renewable Capacity Milestone</h4>
+                                <span class="text-[11px] text-gray-500">9.8k Reads • Environment</span>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-3 group cursor-pointer" onclick="openArticleModal('Creative Economy Boom', 'Modou Lamin', '3 days ago', 'Culture', 'Creative industries contribute record percentages to national GDP as digital exports soar across international markets.')">
+                            <span class="font-serif text-2xl font-bold text-gray-300 group-hover:text-journal-accent transition">03</span>
+                            <div>
+                                <h4 class="text-sm font-bold text-journal-900 group-hover:text-journal-accent transition">Creative Industries Record Surge in Digital Exports</h4>
+                                <span class="text-[11px] text-gray-500">8.1k Reads • Culture</span>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-3 group cursor-pointer" onclick="openArticleModal('Fintech Expansion', 'Sainey Mbye', '4 days ago', 'Business', 'Regulatory sandbox welcomes innovative blockchain and micro-lending startups aiming to bank the unbanked population.')">
+                            <span class="font-serif text-2xl font-bold text-gray-300 group-hover:text-journal-accent transition">04</span>
+                            <div>
+                                <h4 class="text-sm font-bold text-journal-900 group-hover:text-journal-accent transition">Regulatory Sandbox Welcomes Next-Gen Fintech Startups</h4>
+                                <span class="text-[11px] text-gray-500">6.5k Reads • Business</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Newsletter Subscription Box -->
+                <div id="newsletter" class="bg-journal-900 text-white rounded-xl p-6 shadow-md relative overflow-hidden">
+                    <div class="absolute -right-6 -bottom-6 text-gray-800 opacity-20 text-8xl pointer-events-none">
+                        <i class="fa-solid fa-paper-plane"></i>
+                    </div>
+                    <h3 class="font-serif font-bold text-xl mb-2">The Global Echo Dispatch</h3>
+                    <p class="text-xs text-gray-300 mb-4 leading-relaxed">
+                        Get our weekly curated digest of top stories, deep dives, and expert analysis delivered straight to your inbox.
+                    </p>
+                    <form onsubmit="handleNewsletter(event)" class="space-y-3">
+                        <input type="email" placeholder="Your email address" required class="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-xs text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-journal-accent">
+                        <button type="submit" class="w-full bg-journal-accent hover:bg-red-700 text-white font-semibold text-xs py-2.5 rounded-lg transition shadow">
+                            Subscribe Free
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Topics Tag Cloud (Flexbox) -->
+                <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-200">
+                    <h3 class="font-serif font-bold text-lg text-journal-900 pb-3 border-b border-gray-100 mb-4">
+                        Explore Topics
+                    </h3>
+                    <div class="flex flex-wrap gap-2">
+                        <button onclick="filterCategory('Technology')" class="bg-gray-100 hover:bg-journal-accent hover:text-white text-gray-700 text-xs px-3 py-1.5 rounded-full transition font-medium">Technology</button>
+                        <button onclick="filterCategory('Culture')" class="bg-gray-100 hover:bg-journal-accent hover:text-white text-gray-700 text-xs px-3 py-1.5 rounded-full transition font-medium">Culture</button>
+                        <button onclick="filterCategory('Business')" class="bg-gray-100 hover:bg-journal-accent hover:text-white text-gray-700 text-xs px-3 py-1.5 rounded-full transition font-medium">Business</button>
+                        <button onclick="filterCategory('Environment')" class="bg-gray-100 hover:bg-journal-accent hover:text-white text-gray-700 text-xs px-3 py-1.5 rounded-full transition font-medium">Environment</button>
+                        <button onclick="filterCategory('Opinion')" class="bg-gray-100 hover:bg-journal-accent hover:text-white text-gray-700 text-xs px-3 py-1.5 rounded-full transition font-medium">Opinion</button>
+                        <button onclick="filterCategory('all')" class="bg-journal-900 text-white text-xs px-3 py-1.5 rounded-full transition font-medium">View All</button>
+                    </div>
+                </div>
+            </aside>
+        </section>
+
+        <!-- About / Assignment Section -->
+        <section id="about" class="bg-white rounded-xl shadow-sm p-8 border border-gray-200">
+            <div class="max-w-3xl mx-auto text-center space-y-4">
+                <span class="text-journal-accent font-semibold text-xs uppercase tracking-widest">Academic Project Submission</span>
+                <h2 class="font-serif text-3xl font-bold text-journal-900">About The Global Echo</h2>
+                <p class="text-gray-600 text-sm leading-relaxed">
+                    The Global Echo is built as a fully responsive online magazine and news website adhering to rigorous CSS Grid and Flexbox web standards. Designed for desktop, tablet, and mobile browsers, this platform showcases semantic HTML structure, robust component layouts, and clean interactive features without external dependencies.
+                </p>
+                <div class="pt-4 flex justify-center gap-4">
+                    <button onclick="openProjectNote()" class="bg-journal-900 hover:bg-journal-accent text-white font-semibold text-xs px-6 py-3 rounded-lg transition shadow">
+                        <i class="fa-solid fa-file-lines mr-2"></i> View Project Note & Deliverables
+                    </button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer (Semantic HTML & Flexbox) -->
+    <footer class="bg-journal-900 text-gray-400 text-xs border-t border-gray-800 mt-16">
+        <div class="max-w-7xl mx-auto px-4 py-12 grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div class="space-y-4">
+                <h2 class="font-serif text-2xl font-bold text-white tracking-tight">THE GLOBAL ECHO</h2>
+                <p class="text-gray-400 text-xs leading-relaxed">
+                    Independent journalism exploring technology, culture, business, and environment across emerging digital landscapes.
+                </p>
+                <div class="flex space-x-4 text-base">
+                    <a href="#" class="hover:text-white transition"><i class="fa-brands fa-twitter"></i></a>
+                    <a href="#" class="hover:text-white transition"><i class="fa-brands fa-facebook"></i></a>
+                    <a href="#" class="hover:text-white transition"><i class="fa-brands fa-linkedin"></i></a>
+                    <a href="#" class="hover:text-white transition"><i class="fa-brands fa-instagram"></i></a>
+                </div>
+            </div>
+            <div>
+                <h4 class="text-white font-bold text-sm mb-4 uppercase tracking-wider">Categories</h4>
+                <ul class="space-y-2">
+                    <li><a href="#articles" onclick="filterCategory('Technology')" class="hover:text-white transition">Technology</a></li>
+                    <li><a href="#articles" onclick="filterCategory('Culture')" class="hover:text-white transition">Culture & Arts</a></li>
+                    <li><a href="#articles" onclick="filterCategory('Business')" class="hover:text-white transition">Business & Economy</a></li>
+                    <li><a href="#articles" onclick="filterCategory('Environment')" class="hover:text-white transition">Environment & Climate</a></li>
+                    <li><a href="#articles" onclick="filterCategory('Opinion')" class="hover:text-white transition">Opinion & Editorials</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="text-white font-bold text-sm mb-4 uppercase tracking-wider">Quick Links</h4>
+                <ul class="space-y-2">
+                    <li><a href="#" class="hover:text-white transition">Editorial Board</a></li>
+                    <li><a href="#" class="hover:text-white transition">Writing Submissions</a></li>
+                    <li><a href="#" class="hover:text-white transition">Privacy Policy</a></li>
+                    <li><a href="#" class="hover:text-white transition">Terms of Service</a></li>
+                    <li><button onclick="openProjectNote()" class="text-journal-gold hover:underline">Assignment Deliverables Note</button></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="text-white font-bold text-sm mb-4 uppercase tracking-wider">Global Bureau</h4>
+                <p class="text-gray-400 text-xs leading-relaxed mb-4">
+                    Committed to accurate reporting, accessibility, and high performance across all devices.
+                </p>
+                <div class="text-[11px] text-gray-500">
+                    &copy; 2026 The Global Echo. All rights reserved. Built with HTML5 & CSS Grid/Flexbox.
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Article Reader Modal -->
+    <div id="article-modal" class="fixed inset-0 bg-black/70 z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl p-6 md:p-8 relative">
+            <button onclick="closeArticleModal()" class="absolute top-4 right-4 text-gray-400 hover:text-journal-900 text-xl w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 transition">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div id="modal-content" class="space-y-4">
+                <!-- Dynamically populated -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Project Note & Deliverables Modal -->
+    <div id="project-note-modal" class="fixed inset-0 bg-black/70 z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto shadow-2xl p-6 md:p-8 relative">
+            <button onclick="closeProjectNote()" class="absolute top-4 right-4 text-gray-400 hover:text-journal-900 text-xl w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 transition">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div class="space-y-4">
+                <div class="flex items-center gap-2 text-journal-accent font-bold text-xs uppercase tracking-widest">
+                    <i class="fa-solid fa-graduation-cap"></i> Assignment Deliverable Report (150-250 Words)
+                </div>
+                <h2 class="font-serif text-2xl font-bold text-journal-900">Project Note: CSS Grid & Flexbox Website</h2>
+                <div class="bg-gray-50 p-5 rounded-xl border border-gray-200 text-sm leading-relaxed space-y-3 text-gray-700 font-sans">
+                    <p>
+                        <strong>Project Type & Purpose:</strong> "The Global Echo" is a professional online magazine and news website designed for students, educators, and global readers seeking in-depth reporting on technology, culture, business, and the environment.
+                    </p>
+                    <p>
+                        <strong>CSS Grid Usage:</strong> CSS Grid was utilized for major two-dimensional page structures, including the hero breaking story section (featuring a 2-column span for the main article and a sidebar stack) and the main article feed paired with the trending sidebar. Grid provides precise layout control across wide viewports without complex floats.
+                    </p>
+                    <p>
+                        <strong>Flexbox Usage:</strong> Flexbox was implemented for one-dimensional alignment components, such as the top utility header bar, navigation menu items, author and date metadata tags inside article cards, and card footer button arrangements.
+                    </p>
+                    <p>
+                        <strong>Responsive Design & Adaptations:</strong> To support small mobile screens without horizontal scrolling, fluid sizing, responsive CSS grid breakpoints (collapsing multi-column grids into single columns on mobile), and a mobile hamburger menu toggle were implemented.
+                    </p>
+                    <p>
+                        <strong>Challenges & Solutions:</strong> A key challenge was ensuring that category filtering dynamically updated the grid layout smoothly without breaking alignment. This was successfully addressed using clean semantic class selectors and a lightweight JavaScript filtering function.
+                    </p>
+                </div>
+                <div class="pt-2 flex justify-end">
+                    <button onclick="closeProjectNote()" class="bg-journal-900 hover:bg-journal-accent text-white font-semibold text-xs px-6 py-2.5 rounded-lg transition">
+                        Close Report
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="toast" class="fixed bottom-6 right-6 bg-journal-900 text-white px-5 py-3 rounded-xl shadow-xl z-50 transform translate-y-20 opacity-0 transition-all duration-300 flex items-center gap-3">
+        <i class="fa-solid fa-circle-check text-emerald-400 text-lg"></i>
+        <span id="toast-message" class="text-xs font-medium">Action completed successfully.</span>
+    </div>
+
+    <!-- JavaScript for Interactivity -->
+    <script src="script.js">
+        
+    </script>
+</body>
+</html>
